@@ -401,6 +401,8 @@ head raw/regions_no_chr.bed
 **Answer:**
 
 ```bash
+awk 'NR%2==0' 4KRP_chainA.fasta | grep -oE "[A-Z]{1}" | sort | uniq -c | sort -nr
+# OR
 grep -v '^>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c | sort -nr
 ```
 ### Challenging 8
