@@ -340,3 +340,588 @@ EOF
 cat temp.bed
 ```
 ---
+
+## Section 4: Essential Filters – 10 examples
+
+**Why this section matters**: Filters enable text-based processing of plain-text formats like FASTQ, VCF, BED, allowing reproducible summarization without intermediate files.
+
+### Practice 1
+**Task**: Search for lines containing 'PASS' in raw/sample.vcf, counting the matches case-insensitively, to filter high-quality variants in genomic variant calling workflows.
+
+**Answer:**
+
+```bash
+grep -ic 'PASS' raw/sample.vcf
+```
+### Practice 2
+**Task**: Extract the first two columns (CHROM and POS) from raw/sample.vcf, skipping the header line, to summarize variant locations for downstream analysis like plotting.
+
+**Answer:**
+
+```bash
+awk 'NR>1 {print $1, $2}' raw/sample.vcf
+```
+### Practice 3
+**Task**: Sort the lines of raw/sample.vcf numerically by the second column (POS) in descending order, skipping the header, to rank variants by position for priority review.
+
+**Answer:**
+
+```bash
+awk 'NR>1' raw/sample.vcf | sort -k2,2nr
+```
+### Practice 4
+**Task**: Extract the first column (CHROM) from raw/sample.vcf, sort it, and count unique entries with frequencies, ranking by count, to analyze variant distribution across chromosomes.
+
+**Answer:**
+
+```bash
+awk 'NR>1 {print $1}' raw/sample.vcf | sort | uniq -c | sort -nr
+```
+### Practice 5
+**Task**: Filter lines from raw/sample.vcf where the second column (POS) is greater than 100, skipping the header, to select variants in a specific genomic region.
+
+**Answer:**
+
+```bash
+awk 'NR>1 && $2>100' raw/sample.vcf
+```
+### Challenging 6
+**Task**: Remove the 'chr' prefix from the first column in raw/regions.bed, saving to a backup of the original, and preview the changes, to normalize chromosome names for tool compatibility.
+
+**Answer:**
+
+```bash
+cp raw/regions.bed raw/regions.bed.bak
+sed 's/^chr//' raw/regions.bed > raw/regions_no_chr.bed
+head raw/regions_no_chr.bed
+```
+### Challenging 7
+**Task**: Extract sequences from raw/4KRP_chainA.fasta (skipping headers), break into individual amino acids, sort and count unique with frequencies ranked, to compute amino acid composition in protein analysis.
+
+**Answer:**
+
+```bash
+grep -v '^>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c | sort -nr
+```
+### Challenging 8
+**Task**: Compute the frequency of each amino acid in the sequences of raw/4KRP_chainA.fasta (skipping headers), printing sorted by count, to assess protein composition.
+
+**Answer:**
+
+```bash
+grep -v '^>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c | sort -nr
+```
+## Optional 9:
+
+**Task**: In `raw/4KRP_chainB.fasta`, count the N-glycosylation motif **`N[^P][ST][^P]`** (as defined in Uniprot), allowing matches across line breaks, and also report **1-based start positions**.
+
+**Answer:**
+
+```bash
+python - <<'PY'
+from pathlib import Path
+s=''.join(x.strip() for x in Path('raw/4KRP_chainB.fasta').read_text().splitlines() if not x.startswith('>'))
+for i in range(len(s)-3):
+    m=s[i:i+4]
+    if m[0]=='N' and m[1]!='P' and m[2] in 'ST' and m[3]!='P':
+        print(i+1, m)
+PY
+```
+
+### Optional 10
+**Task**: Replace all 'A' residues with 'N' in the sequence lines of raw/4KRP_chainA.fasta (leaving headers intact), saving to masked.fasta, to mask specific residues for privacy or testing in annotations.
+
+**Answer:**
+
+```bash
+sed '/^>/! s/A/N/g' raw/4KRP_chainA.fasta > masked.fasta
+```
+---
+
+## Section 5: Package Management & Essential Tools – 10 examples
+
+**Why this section matters**: Proper package management with apt and Python venvs avoids dependency conflicts, ensuring portable setups for basic data analysis in bioinformatics without overwhelming complexity.
+
+### Practice 1
+**Task**: Update the package list and install the 'tree' utility using apt-get, assuming sudo access on a Debian-based system like Ubuntu, to enable directory visualization for project organization without needing advanced managers.
+
+**Answer:**
+
+```bash
+sudo apt-get update && sudo apt-get install tree
+```
+### Practice 2
+**Task**: Install the 'htop' process viewer using apt, to monitor system resources like CPU and memory during bioinformatics tasks, confirming installation by running its version.
+
+**Answer:**
+
+```bash
+sudo apt install htop && htop --version
+```
+### Practice 3
+**Task**: Install Python 3.11 using apt-get (adds PPA if needed on older systems), to set up a specific version for compatibility with legacy bioinformatics scripts, verifying the installation.
+
+**Answer:**
+
+```bash
+sudo apt-get install python3.11 && python3.11 --version
+```
+### Practice 4
+**Task**: Install Python 3.12 using apt, to use a stable version for general data processing, then check the version to confirm.
+
+**Answer:**
+
+```bash
+sudo apt install python3.12 && python3.12 --version
+```
+### Practice 5
+**Task**: Install Python 3.13 using apt-get (adds PPA if needed), for accessing the latest features in scripts, verifying with version output.
+
+**Answer:**
+
+```bash
+sudo apt-get install python3.13 && python3.13 --version
+```
+### Challenging 6
+**Task**: Create a virtual environment named 'env311' using Python 3.11, activate it, to isolate dependencies for numpy-based array operations in data analysis.
+
+**Answer:**
+
+```bash
+python3.11 -m venv env311
+source env311/bin/activate
+```
+### Challenging 7
+**Task**: Create 'env312' with Python 3.12, activate, install xgboost for ML models on genomic data, then list installed packages.
+
+**Answer:**
+
+```bash
+python3.12 -m venv env312
+source env312/bin/activate
+pip install xgboost
+pip list
+deactivate
+```
+### Challenging 8
+**Task**: Create 'env313' with Python 3.13, activate, install pandas for data frames in variant tables, deactivate after listing packages.
+
+**Answer:**
+
+```bash
+python3.13 -m venv env313
+source env313/bin/activate
+pip install pandas
+pip list
+deactivate
+```
+### Optional 9
+**Task**: Activate 'env311', install numpy for numerical computations, list all packages to confirm, then deactivate, to manage isolated environments for array-based bio data processing.
+
+**Answer:**
+
+```bash
+source env311/bin/activate
+pip install numpy
+pip list
+deactivate
+```
+### Optional 10
+**Task**: Switch between env312 and env313: activate env312, list packages, deactivate, then activate env313, list, to practice environment switching for different package needs in workflows.
+
+**Answer:**
+
+```bash
+source env312/bin/activate
+pip list
+deactivate
+source env313/bin/activate
+pip list
+```
+---
+
+## Section 6: Everyday Utilities & System Interaction – 10 examples
+
+**Why this section matters**: These utilities handle compression, downloads, and monitoring, key for managing terabyte-scale sequencing data in cloud/HPC.
+
+### Practice 1
+**Task**: Copy raw/ERR769583.fastq.gz to temp.fastq, compress it with gzip keeping the original, and list the results, to practice compression for storage efficiency in data archives.
+
+**Answer:**
+
+```bash
+cp raw/ERR769583.fastq.gz temp.fastq
+gzip -k temp.fastq
+ls -lh temp.fastq*
+```
+### Practice 2
+**Task**: Archive the raw/ directory into raw.tgz with compression and verbose output, then check the archive size, to bundle data for sharing or backup in collaborative studies.
+
+**Answer:**
+
+```bash
+tar -czvf raw.tgz raw/
+ls -lh raw.tgz
+```
+### Practice 3
+**Task**: Measure disk usage for each file in raw/, sorting by size, to identify large datasets and manage storage in resource-limited environments.
+
+**Answer:**
+
+```bash
+du -ah raw/ | sort -h
+```
+### Practice 4
+**Task**: Download ERR769583.fastq.gz to raw/ with resume support if interrupted, to handle unstable connections common in large data fetches from ENA.
+
+**Answer:**
+
+```bash
+wget -c -P raw/ ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR769/ERR769583/ERR769583.fastq.gz
+```
+### Practice 5
+**Task**: Fetch a JSON response from Ensembl API for ping, parsing with jq if available, to test API integration for annotation in scripts.
+
+**Answer:**
+
+```bash
+curl -s 'https://rest.ensembl.org/info/ping' -H 'Content-Type: application/json' | jq .
+```
+### Challenging 6
+**Task**: Export the PATH variable after appending a bin/ directory, saving to path.log, to debug environment setups in tool integrations.
+
+**Answer:**
+
+```bash
+export PATH="$PATH:$PWD/bin"
+echo "$PATH" > path.log
+```
+### Challenging 7
+**Task**: Search command history for 'zcat' uses, showing the last 5, to recall previous commands for building repeatable scripts (note: Bash must be interactive for history to show entries; test in interactive terminal).
+
+**Answer:**
+
+```bash
+history | grep zcat | tail -n 5
+```
+### Challenging 8
+**Task**: Determine the file type of all .gz files in raw/, to confirm compression and format before processing.
+
+**Answer:**
+
+```bash
+file raw/*.gz
+```
+### Optional 9
+**Task**: Clear the terminal screen and reprint the current path, to reset focus during long sessions without losing orientation.
+
+**Answer:**
+
+```bash
+clear
+pwd
+```
+### Optional 10
+**Task**: Download a FASTQ, inspect its type and size, compress if needed, and archive to tgz, confirming each step, to practice a full data ingestion workflow.
+
+**Answer:**
+
+```bash
+wget -c -P raw/ ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR769/ERR769583/ERR769583.fastq.gz
+file raw/ERR769583.fastq.gz
+ls -lh raw/ERR769583.fastq.gz
+gzip -f raw/ERR769583.fastq.gz
+tar -czvf raw.tgz raw/ERR769583.fastq.gz
+```
+---
+
+## Section 7: Essential Regular Expressions & Operational Patterns – 10 examples
+
+**Why this section matters**: Regex and patterns enable precise text parsing and safe scripting for genomic formats, bridging to advanced pipelines.
+
+### Practice 1
+**Task**: Search for the pattern 'ATC' in raw/4KRP_chainA.fasta, counting occurrences, to find specific motifs in protein sequences for functional analysis.
+
+**Answer:**
+
+```bash
+grep -o 'ATC' raw/4KRP_chainA.fasta | wc -l
+```
+### Practice 2
+**Task**: Match and count lines starting with '>' in raw/4KRP_chainA.fasta, to determine the number of sequences in a FASTA file for multi-entry processing.
+
+**Answer:**
+
+```bash
+grep -c '^>' raw/4KRP_chainA.fasta
+```
+### Practice 3
+**Task**: Find and count sequences with 10 or more consecutive 'A's in raw/4KRP_chainA.fasta, to detect poly-A regions in proteins.
+
+**Answer:**
+
+```bash
+grep -Ec 'A{10,}' raw/4KRP_chainA.fasta
+```
+### Practice 4
+**Task**: Store a filename in a variable and echo it with its size, quoting to handle spaces, to practice safe variable expansion in scripts.
+
+**Answer:**
+
+```bash
+F='raw/4KRP_chainA.fasta'; echo "$F"; du -h "$F"
+```
+### Practice 5
+**Task**: Use brace expansion to create files sample1.txt and sample2.txt in one command, to batch generate placeholders for multi-sample analyses.
+
+**Answer:**
+
+```bash
+touch sample{1,2}.txt
+```
+### Challenging 6
+**Task**: Match lines with 'chr1' or 'chr2' in raw/sample.vcf using alternation, extracting the CHROM column, to filter specific chromosomes.
+
+**Answer:**
+
+```bash
+grep -E '^(chr1|chr2)' raw/sample.vcf | cut -f1
+```
+### Challenging 7
+**Task**: Simulate SSH key generation for bio@lab, with no passphrase, to set up secure remote access for HPC or cloud workflows.
+
+**Answer:**
+
+```bash
+ssh-keygen -t ed25519 -C 'bio@lab' -N ''
+```
+### Challenging 8
+**Task**: Compute SHA256 checksum for raw/ERR769583.fastq.gz, save to check.sha, and verify it, to ensure data integrity after download.
+
+**Answer:**
+
+```bash
+sha256sum raw/ERR769583.fastq.gz > check.sha
+sha256sum -c check.sha
+```
+### Optional 9
+**Task**: Use find to locate .fastq.gz files in raw/, pass null-safe to xargs for parallel line counting (limit to 2 processes), to batch process read counts politely on shared HPC (increase -P only if policy allows).
+
+**Answer:**
+
+```bash
+find raw/ -type f -name '*.fastq.gz' -print0 | xargs -0 -n1 -P2 sh -c 'zcat "$0" | wc -l | awk "{print \$1/4}"'
+```
+### Optional 10
+**Task**: Create a simple SLURM-like script inline with here-doc, including a zcat command, make it executable, to orchestrate jobs in HPC.
+
+**Answer:**
+
+```bash
+cat <<'EOF' > run_fastq.sh
+#!/bin/bash
+zcat raw/ERR769583.fastq.gz | head -n 8
+EOF
+chmod +x run_fastq.sh
+./run_fastq.sh
+```
+---
+
+## Section 8: Awk Examples – 10 examples
+
+**Why this section matters**: Awk is powerful for tabular data processing in bio formats like VCF, BED, allowing one-liners for filtering and stats.
+
+### Practice 1
+**Task**: Create a mock VCF with echo if needed, then use awk to print the number of lines (variants), skipping the header, to count entries in variant files for summary stats.
+
+**Answer:**
+
+```bash
+awk 'BEGIN{n=0} !/^#/ {n++} END{print n}' raw/sample.vcf
+```
+### Practice 2
+**Task**: Use awk to extract the CHROM and POS columns from raw/sample.vcf, skipping the header, to generate a simple position list for genomic plotting.
+
+**Answer:**
+
+```bash
+awk 'NR>1 {print $1, $2}' raw/sample.vcf
+```
+### Practice 3
+**Task**: Filter raw/sample.vcf for QUAL > 20, printing the full lines, skipping header, to select high-quality variants for downstream analysis.
+
+**Answer:**
+
+```bash
+awk 'NR>1 && $6>20' raw/sample.vcf
+```
+### Practice 4
+**Task**: Compute the average QUAL from raw/sample.vcf, skipping header, to assess overall variant quality in a dataset.
+
+**Answer:**
+
+```bash
+awk 'NR>1 {sum+=$6; n++} END{if(n) print sum/n}' raw/sample.vcf
+```
+### Practice 5
+**Task**: Print lines from raw/regions.bed where end - start > 20, to filter large intervals for genomic feature analysis.
+
+**Answer:**
+
+```bash
+awk '$3-$2>20' raw/regions.bed
+```
+### Optional 6
+**Task**: Create a mock FASTQ with echo if needed, then use awk to count reads with average quality >30 (Phred+33), to perform QC filtering.
+
+**Answer:**
+
+```bash
+# The lecture/worksheet materials do not provide an awk character-to-ASCII
+# conversion function, so there is no fully supported one-line solution
+# from the supplied material for this task.
+#
+# The intended calculation is:
+# average Phred quality = sum(ASCII(quality character) - 33) / read length
+# and keep reads where that average > 30.
+```
+### Challenging 7
+**Task**: Use awk to add a new column to raw/sample.vcf (QUAL*2), printing the modified lines, skipping header, to normalize scores for comparison.
+
+**Answer:**
+
+```bash
+awk 'NR==1 {print; next} {print $0, $6*2}' raw/sample.vcf
+```
+### Challenging 8
+**Task**: Compute min, max, avg POS from raw/sample.vcf, skipping header, to get position stats for variant distribution.
+
+**Answer:**
+
+```bash
+awk 'NR>1 {if(n++==0){min=max=sum=$2}else{if($2<min)min=$2;if($2>max)max=$2}sum+=$2} END{if(n) print min, max, sum/n}' raw/sample.vcf
+```
+### Optional 9
+**Task**: Use awk to transpose columns in raw/regions.bed (mock tabular), to reformat for different tool inputs.
+
+**Answer:**
+
+```bash
+awk '{print $2, $1, $3}' raw/regions.bed
+```
+### Optional 10
+**Task**: Calculate average read length from mock FASTQ, to assess sequencing quality.
+
+**Answer:**
+
+```bash
+awk 'NR%4==2 {sum+=length($0); n++} END{if(n) print sum/n}' mock.fastq
+```
+---
+## Section 9: Sed Examples – 10 examples
+
+**Why this section matters**: Sed excels at stream-editing large text files like FASTQ without creating temporary files, enabling efficient substitutions, deletions, and transformations in bioinformatics pipelines for tasks such as cleaning sequences or normalizing headers.
+
+### Practice 1
+**Task**: Normalize headers in raw/ERR1021663_1.fastq.gz by stripping the '/1' suffix from header lines (every 1st of 4 lines), previewing the first 20 lines to verify, to standardize read identifiers for compatibility with tools like aligners that expect clean headers without pair suffixes.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | sed -E '1~4 s#/1$##' | head -n 20
+```
+### Practice 2
+**Task**: Replace spaces with underscores in header lines of raw/ERR1021663_1.fastq.gz (every 1st of 4 lines), previewing the first 20 lines, to prevent parsing errors in downstream tools that treat spaces as delimiters in FASTQ headers.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | sed '1~4 s/ /_/g' | head -n 20
+```
+### Practice 3
+**Task**: Extract only the sequence lines from raw/ERR1021663_1.fastq.gz (every 2nd of 4 lines), saving to a text file and previewing the first 20, to isolate sequences for analyses like motif searching without headers or qualities.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | sed -n '2~4p' > sequences.txt
+head -n 20 sequences.txt
+```
+### Practice 4
+**Task**: Convert FASTQ to FASTA by changing '@' to '>' in headers (every 1st of 4 lines) and printing only headers and sequences (skipping '+' and quality), previewing the first 20 lines, to prepare data for tools that require FASTA input like BLAST.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | sed -n '1~4 s/^@/>/; 2~4p' | head -n 20
+```
+### Practice 5
+**Task**: Mask homopolymers of 6 or more 'A's in sequence lines of raw/ERR1021663_1.fastq.gz (every 2nd of 4 lines) with 'NNNNNN', keeping qualities intact and lengths preserved, to handle low-complexity regions that may cause alignment artifacts.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | sed '2~4 s/A{6,}/NNNNNN/g' | head -n 20
+```
+### Challenging 6
+**Task**: Remove a known Illumina adapter sequence 'AGATCGGAAGAGC' from sequence lines in raw/ERR1021663_1.fastq.gz (every 2nd of 4 lines), previewing the first 40 lines case-insensitively, to perform basic adapter trimming before alignment, noting this is a simple global replacement not a full trimmer.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | sed -E '2~4 s/AGATCGGAAGAGC//Ig' | head -n 40
+```
+### Optional 7
+**Task**: Identify reads in raw/ERR1021663_1.fastq.gz where sequences (every 2nd of 4 lines) end with one or more 'N's, printing only their headers (every 1st of 4 lines), to flag ambiguous tail bases for quality filtering in sequencing pipelines.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | awk '
+NR%4==1 {h=$0}
+NR%4==2 && /N+$/ {print h}
+'
+```
+### optional 8
+**Task**: Filter raw/ERR1021663_1.fastq.gz to keep only full 4-line reads where headers contain 'ERR1021663', to subset reads by sample ID in multi-sample FASTQ files for targeted analysis.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | awk '
+NR%4==1 {h=$0}
+NR%4==2 {s=$0}
+NR%4==3 {p=$0}
+NR%4==0 {q=$0; if (h ~ /ERR1021663/) print h ORS s ORS p ORS q}
+'
+```
+### Optional 9
+**Task**: Append '/1' to headers in raw/ERR1021663_1.fastq.gz (every 1st of 4 lines) that do not already end with '/1' or '/2', previewing the first 16 lines, to standardize single-end reads for paired-end compatible tools.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | awk '
+NR%4==1 {
+    h=$0
+    if (h !~ /\/(1|2)$/) h=h "/1"
+    print h
+    next
+}
+NR%4==2 {print}
+NR%4==3 {print}
+NR%4==0 {print}
+' | head -n 16
+```
+### Optional 10
+**Task**: Mask repeats of 'AT' three or more times in sequence lines of raw/ERR1021663_1.fastq.gz (every 2nd of 4 lines) with 'NNNNNN', case-insensitively, to handle dinucleotide repeats that may affect variant calling accuracy.
+
+**Answer:**
+
+```bash
+zcat raw/ERR1021663_1.fastq.gz | sed -E '2~4 s/(AT){3,}/NNNNNN/Ig' | head -n 40
+```
+---
+
+# End of Worksheet
+Practice these in your terminal for mastery. Refer back to presentation slides for context!
