@@ -169,7 +169,7 @@ Select your Ubuntu distribution.
 The bottom-left of VS Code should show something similar to:
 
 ```text
-WSL: Ubuntu
+><WSL: Ubuntu
 ```
 
 ### Step 2 — Open your project
