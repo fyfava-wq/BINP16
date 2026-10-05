@@ -331,12 +331,12 @@ line.split("CGA") # split using specific text
 
 Other useful methods:
 ```python
-s.count("A")
-s.lower()
-s.upper()
-s.capitalize()
-s.replace("T", "U")
-len(s)
+s.count("A")        # count how many charecters
+s.lower()           # make lowecase
+s.upper()           # make uppercase
+s.capitalize()      # make the first letter uppercase
+s.replace("T", "U") # replaces 1st symbol withe the second symbol
+len(s)              # counts total number of charecters
 ```
 
 ---
