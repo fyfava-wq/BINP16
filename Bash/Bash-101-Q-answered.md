@@ -80,8 +80,6 @@ pwd
 
 ```bash
 ls -lha bio_project/raw/
-# OR (by professor)
-ls -lh raw/
 ```
 ### Practice 3
 **Task**: Change your current directory to the raw/ folder, print the new location to verify, and then return to the previous directory, demonstrating safe navigation that avoids getting lost in deep HPC file trees during multi-step analyses like QC and alignment.
@@ -92,8 +90,6 @@ ls -lh raw/
 cd raw/
 pwd
 cd -
-# OR (by professor)
-cd raw/ && pwd && cd -
 ```
 ### Practice 4
 **Task**: Count the number of hidden files (starting with '.') in your home directory, as bioinformatics tools often use hidden configs like .conda or .nextflow for reproducibility, and knowing how to reveal them helps in troubleshooting environment issues.
@@ -145,8 +141,6 @@ mkdir -p ../temp
 cd ../temp
 pwd
 cd -
-# OR (by professor)
-mkdir -p ../temp && cd ../temp && pwd && cd -
 ```
 ### Optional 9
 **Task**: Visualize the structure of the bio_project directory tree up to depth 2, to quickly inspect organization for reproducibility, assuming tree is installed or falling back to ls if not (useful for auditing workflows before submission to journals or compliance).
@@ -165,8 +159,6 @@ ls -R .
 
 ```bash
 df -h / | awk 'NR==2 {print $4}'
-# OR (by professor)
-df -h . | awk 'NR==2{print $4}'
 ```
 ---
 
@@ -181,8 +173,6 @@ df -h . | awk 'NR==2{print $4}'
 
 ```bash
 mkdir -p bio_project/{raw,results,scripts,logs}
-# OR (by professor)
-mkdir -p {raw,results,scripts,logs}
 ```
 ### Practice 2
 **Task**: Copy the file raw/ERR769583.fastq.gz to the results/ directory without overwriting existing files, verifying the operation with verbose output, to simulate backing up raw data before processing in a workflow.
@@ -202,8 +192,6 @@ cp raw/ERR769583.fastq.gz results/
 ```bash
 mv -i raw/ERR769587.fastq.gz raw/sample2.fastq.gz
 ls raw/
-# OR (by professor)
-mv raw/ERR769587.fastq.gz raw/sample2.fastq.gz
 ```
 ### Practice 4
 **Task**: Safely remove a temporary file (e.g., create temp.txt first if needed), prompting for confirmation, to demonstrate cautious deletion in HPC where rm -r could destroy critical datasets if misused.
@@ -213,8 +201,6 @@ mv raw/ERR769587.fastq.gz raw/sample2.fastq.gz
 ```bash
 touch temp.txt
 rm -i temp.txt
-# OR (by professor)
-touch temp.txt && rm temp.txt
 ```
 ### Practice 5
 **Task**: Preview the first 8 lines (2 full reads) of raw/ERR769583.fastq.gz without decompressing to disk, to check read headers and quality before full processing in a sequencing QC step.
@@ -223,8 +209,6 @@ touch temp.txt && rm temp.txt
 
 ```bash
 zcat raw/ERR769583.fastq.gz | head -n 8
-# OR (by professor)
-zcat raw/ERR769583.fastq.gz | head -8
 ```
 ### Challenging 6
 **Task**: Synchronize the raw/ directory to a backup/ directory, preserving permissions and timestamps, with progress display, to model data transfers for biobanks or cloud integration in large-scale genomics.
@@ -233,8 +217,6 @@ zcat raw/ERR769583.fastq.gz | head -8
 
 ```bash
 rsync -avP raw/ backup/
-# OR (by professor)
-rsync -av raw/ backup/
 ```
 ### Challenging 7
 **Task**: Count the number of reads in raw/ERR769583.fastq.gz by calculating lines/4, to perform a sanity check on sequencing depth before alignment, ensuring the file is complete and not truncated.
@@ -253,9 +235,6 @@ echo $(( $(zcat raw/ERR769583.fastq.gz | wc -l) / 4 ))
 
 ```bash
 zless raw/ERR769583.fastq.gz
-# Search in less with /N, then press n for the next match.
-# OR (by professor)
-zcat raw/ERR769583.fastq.gz | less
 ```
 ### Optional 9
 **Task**: Monitor the last lines of a log file (create logs/pipeline.log with echo if needed) in real-time, to track progress of a running pipeline like FastQC or alignment, essential for long HPC jobs.
@@ -279,8 +258,6 @@ echo 'ATGC' > data.txt
 cp data.txt copy.txt
 wc -l data.txt
 rm -i copy.txt
-# OR (by professor)
-echo "ATGC" > data.txt && cp data.txt copy.txt && wc -l copy.txt && rm copy.txt
 ```
 ---
 
@@ -305,8 +282,6 @@ zcat raw/ERR769583.fastq.gz | head -8 > preview.txt 2> errors.log
 
 ```bash
 zcat raw/ERR769583.fastq.gz | head -n 8 | wc -l
-# OR (by professor)
-zcat raw/ERR769583.fastq.gz | head -40 | wc -l
 ```
 ### Practice 3
 **Task**: Search for 'chr1' lines in raw/sample.vcf, counting the matches, to filter variants by chromosome in genomic studies, providing a quick summary without loading the full file.
@@ -366,8 +341,6 @@ pkill -f zcat
 ```bash
 ls does_not_exist > out.log 2>&1
 head out.log
-# OR (by professor)
-ls missing.file > out.log 2>&1
 ```
 ### Optional 9
 **Task**: Sort the lines of raw/sample.vcf using input redirection from the file, saving the sorted output to sorted.vcf, to prepare data for tools that require sorted input like bedtools.
@@ -408,8 +381,6 @@ EOF
 
 ```bash
 grep -ic 'PASS' raw/sample.vcf
-# OR (by professor)
-grep -ic PASS raw/sample.vcf
 ```
 ### Practice 2
 **Task**: Extract the first two columns (CHROM and POS) from raw/sample.vcf, skipping the header line, to summarize variant locations for downstream analysis like plotting.
@@ -448,8 +419,6 @@ grep -v '^#' raw/sample.vcf | cut -f1 | sort | uniq -c
 
 ```bash
 awk 'NR>1 && $2>100' raw/sample.vcf
-# OR (by professor)
-awk 'NR>1 && $2 > 100' raw/sample.vcf
 ```
 ### Challenging 6
 **Task**: Remove the 'chr' prefix from the first column in raw/regions.bed, saving to a backup of the original, and preview the changes, to normalize chromosome names for tool compatibility.
@@ -470,8 +439,6 @@ head raw/regions_no_chr.bed
 awk 'NR%2==0' 4KRP_chainA.fasta | grep -oE "[A-Z]{1}" | sort | uniq -c | sort -nr
 # OR
 grep -v '^>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c | sort -nr
-# OR (by professor)
-grep -v '>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c
 ```
 ### Challenging 8
 **Task**: Compute the frequency of each amino acid in the sequences of raw/4KRP_chainA.fasta (skipping headers), printing sorted by count, to assess protein composition.
@@ -480,8 +447,6 @@ grep -v '>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c
 
 ```bash
 grep -v '^>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c | sort -nr
-# OR (by professor)
-grep -v '>' raw/4KRP_chainA.fasta | fold -w1 | sort | uniq -c | sort -nr
 ```
 ## Optional 9:
 
@@ -507,8 +472,6 @@ PY
 
 ```bash
 sed '/^>/! s/A/N/g' raw/4KRP_chainA.fasta > masked.fasta
-# OR (by professor)
-sed 's/A/N/g' raw/4KRP_chainA.fasta > masked.fasta
 ```
 ---
 
@@ -566,8 +529,6 @@ sudo apt-get install python3.13 && python3.13 --version
 ```bash
 python3.11 -m venv env311
 source env311/bin/activate
-# OR (by professor)
-python3.11 -m venv env311 && source env311/bin/activate
 ```
 ### Challenging 7
 **Task**: Create 'env312' with Python 3.12, activate, install xgboost for ML models on genomic data, then list installed packages.
@@ -580,8 +541,6 @@ source env312/bin/activate
 pip install xgboost
 pip list
 deactivate
-# OR (by professor)
-python3.12 -m venv env312 && source env312/bin/activate && pip install xgboost && pip list
 ```
 ### Challenging 8
 **Task**: Create 'env313' with Python 3.13, activate, install pandas for data frames in variant tables, deactivate after listing packages.
@@ -594,8 +553,6 @@ source env313/bin/activate
 pip install pandas
 pip list
 deactivate
-# OR (by professor)
-python3.13 -m venv env313 && source env313/bin/activate && pip install pandas && pip list && deactivate
 ```
 ### Optional 9
 **Task**: Activate 'env311', install numpy for numerical computations, list all packages to confirm, then deactivate, to manage isolated environments for array-based bio data processing.
@@ -607,8 +564,6 @@ source env311/bin/activate
 pip install numpy
 pip list
 deactivate
-# OR (by professor)
-source env311/bin/activate && pip install numpy && pip list && deactivate
 ```
 ### Optional 10
 **Task**: Switch between env312 and env313: activate env312, list packages, deactivate, then activate env313, list, to practice environment switching for different package needs in workflows.
@@ -621,8 +576,7 @@ pip list
 deactivate
 source env313/bin/activate
 pip list
-# OR (by professor)
-source env312/bin/activate && pip list && deactivate && source env313/bin/activate && pip list && deactivate
+deactivate
 ```
 ---
 
@@ -650,8 +604,6 @@ zcat raw/ERR769583.fastq.gz > temp.fastq && gzip -k temp.fastq
 ```bash
 tar -czvf raw.tgz raw/
 ls -lh raw.tgz
-# OR (by professor)
-tar -czf raw.tgz raw/
 ```
 ### Practice 3
 **Task**: Measure disk usage for each file in raw/, sorting by size, to identify large datasets and manage storage in resource-limited environments.
@@ -669,8 +621,6 @@ find raw -maxdepth 1 -type f -print0 | xargs -0 du -sh | sort -hr
 **Answer:**
 
 ```bash
-wget -c -P raw/ ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR769/ERR769583/ERR769583.fastq.gz
-# OR (by professor)
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR769/ERR769583/ERR769583.fastq.gz -P raw/
 ```
 ### Practice 5
@@ -691,8 +641,6 @@ curl https://rest.ensembl.org/info/ping?content-type=application/json
 ```bash
 export PATH="$PATH:$PWD/bin"
 echo "$PATH" > path.log
-# OR (by professor)
-export PATH=$PATH:bin && echo $PATH
 ```
 ### Challenging 7
 **Task**: Search command history for 'zcat' uses, showing the last 5, to recall previous commands for building repeatable scripts (note: Bash must be interactive for history to show entries; test in interactive terminal).
@@ -709,8 +657,6 @@ history | grep zcat | tail -n 5
 
 ```bash
 file raw/*.gz
-# OR (by professor)
-file raw/ERR769583.fastq.gz
 ```
 ### Optional 9
 **Task**: Clear the terminal screen and reprint the current path, to reset focus during long sessions without losing orientation.
@@ -748,8 +694,6 @@ wget -nc ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR769/ERR769583/ERR769583.fastq.gz 
 
 ```bash
 grep -o 'ATC' raw/4KRP_chainA.fasta | wc -l
-# OR (by professor)
-grep -o ATC raw/4KRP_chainA.fasta | wc -l
 ```
 ### Practice 2
 **Task**: Match and count lines starting with '>' in raw/4KRP_chainA.fasta, to determine the number of sequences in a FASTA file for multi-entry processing.
@@ -867,8 +811,6 @@ awk 'NR>1{count++} END{print count}' raw/sample.vcf
 
 ```bash
 awk 'NR>1 {print $1, $2}' raw/sample.vcf
-# OR (by professor)
-awk 'NR>1{print $1, $2}' raw/sample.vcf
 ```
 ### Practice 3
 **Task**: Filter raw/sample.vcf for QUAL > 20, printing the full lines, skipping header, to select high-quality variants for downstream analysis.
@@ -877,8 +819,6 @@ awk 'NR>1{print $1, $2}' raw/sample.vcf
 
 ```bash
 awk 'NR>1 && $6>20' raw/sample.vcf
-# OR (by professor)
-awk 'NR>1 && $6 > 20' raw/sample.vcf
 ```
 ### Practice 4
 **Task**: Compute the average QUAL from raw/sample.vcf, skipping header, to assess overall variant quality in a dataset.
@@ -897,8 +837,6 @@ awk 'NR>1{sum+=$6; n++} END{print sum/n}' raw/sample.vcf
 
 ```bash
 awk '$3-$2>20' raw/regions.bed
-# OR (by professor)
-awk '$3 - $2 > 20' raw/regions.bed
 ```
 ### Optional 6
 **Task**: Create a mock FASTQ with echo if needed, then use awk to count reads with average quality >30 (Phred+33), to perform QC filtering.
@@ -906,14 +844,6 @@ awk '$3 - $2 > 20' raw/regions.bed
 **Answer:**
 
 ```bash
-# The lecture/worksheet materials do not provide an awk character-to-ASCII
-# conversion function, so there is no fully supported one-line solution
-# from the supplied material for this task.
-#
-# The intended calculation is:
-# average Phred quality = sum(ASCII(quality character) - 33) / read length
-# and keep reads where that average > 30.
-# OR (by professor)
 echo -e "@r1\nATGC\n+\nIIII\n@r2\nCCCC\n+\n!!!!" > mock.fastq && awk 'BEGIN{ascii=" !\\\"#$%&'\''()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_abcdefghijklmnopqrstuvwxyz{|}~"; hq=0} NR%4==0{sum=0; len=length($0); for(i=1;i<=len;i++){c=substr($0,i,1); sum+=index(ascii,c)-1-33} if(sum/len>30) hq++} END{print hq+0}' mock.fastq
 ```
 ### Challenging 7
@@ -978,8 +908,6 @@ zcat raw/ERR1021663_1.fastq.gz | sed '1~4 s:/1$::' | head -20
 
 ```bash
 zcat raw/ERR1021663_1.fastq.gz | sed '1~4 s/ /_/g' | head -n 20
-# OR (by professor)
-zcat raw/ERR1021663_1.fastq.gz | sed '1~4 s/ /_/g' | head -20
 ```
 ### Practice 3
 **Task**: Extract only the sequence lines from raw/ERR1021663_1.fastq.gz (every 2nd of 4 lines), saving to a text file and previewing the first 20, to isolate sequences for analyses like motif searching without headers or qualities.
@@ -989,8 +917,6 @@ zcat raw/ERR1021663_1.fastq.gz | sed '1~4 s/ /_/g' | head -20
 ```bash
 zcat raw/ERR1021663_1.fastq.gz | sed -n '2~4p' > sequences.txt
 head -n 20 sequences.txt
-# OR (by professor)
-zcat raw/ERR1021663_1.fastq.gz | sed -n '2~4p' | head -20
 ```
 ### Practice 4
 **Task**: Convert FASTQ to FASTA by changing '@' to '>' in headers (every 1st of 4 lines) and printing only headers and sequences (skipping '+' and quality), previewing the first 20 lines, to prepare data for tools that require FASTA input like BLAST.
@@ -999,8 +925,6 @@ zcat raw/ERR1021663_1.fastq.gz | sed -n '2~4p' | head -20
 
 ```bash
 zcat raw/ERR1021663_1.fastq.gz | sed -n '1~4 s/^@/>/; 2~4p' | head -n 20
-# OR (by professor)
-zcat raw/ERR1021663_1.fastq.gz | sed -n '1~4 s/^@/>/p; 2~4 p' | head -20
 ```
 ### Practice 5
 **Task**: Mask homopolymers of 6 or more 'A's in sequence lines of raw/ERR1021663_1.fastq.gz (every 2nd of 4 lines) with 'NNNNNN', keeping qualities intact and lengths preserved, to handle low-complexity regions that may cause alignment artifacts.
@@ -1019,8 +943,6 @@ zcat raw/ERR1021663_1.fastq.gz | sed '2~4 s/A\{6,\}/NNNNNN/g' | head -20
 
 ```bash
 zcat raw/ERR1021663_1.fastq.gz | sed -E '2~4 s/AGATCGGAAGAGC//Ig' | head -n 40
-# OR (by professor)
-zcat raw/ERR1021663_1.fastq.gz | sed '2~4 s/AGATCGGAAGAGC//g' | head -40
 ```
 ### Optional 7
 **Task**: Identify reads in raw/ERR1021663_1.fastq.gz where sequences (every 2nd of 4 lines) end with one or more 'N's, printing only their headers (every 1st of 4 lines), to flag ambiguous tail bases for quality filtering in sequencing pipelines.
