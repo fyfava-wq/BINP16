@@ -293,8 +293,8 @@ Do not rely on the displayed order of a set.
 ### Membership
 
 ```python
-'apple' in fruit
-'crabgrass' in fruit
+'apple' in fruit        # True
+'crabgrass' in fruit    # False
 ```
 
 ### Add/remove
