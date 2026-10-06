@@ -600,18 +600,18 @@ s[::-1]
 
 ### String methods
 ```python
-s.count("A")
-s.find("DNA")
-s.index("DNA")
-s.strip()
-s.lstrip()
-s.rstrip()
-s.split()
-s.lower()
-s.upper()
-s.capitalize()
-s.replace("T", "U")
-len(s)
+s.count("A")            # counts how many times "A" appears in s
+s.find("DNA")           # finds the first position of "DNA"; returns -1 if not found
+s.index("DNA")          # finds the first position of "DNA"; gives an error if not found
+s.strip()               # removes whitespace from both ends of s
+s.lstrip()              # removes whitespace from the left/start of s
+s.rstrip()              # removes whitespace from the right/end of s
+s.split()               # splits s into a list of words/items
+s.lower()               # converts all letters in s to lowercase
+s.upper()               # converts all letters in s to uppercase
+s.capitalize()          # makes the first character uppercase and the rest lowercase
+s.replace("T", "U")     # replaces every "T" in s with "U"
+len(s)                  # returns the number of characters in s
 ```
 
 ### Modules
