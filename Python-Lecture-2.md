@@ -571,7 +571,7 @@ They can also contain sets or other collection types.
 
 ---
 
-# (13. `%` string formatting)[Supplementary/ 13_explained.md]
+# [13. `%` string formatting](Supplementary/ 13_explained.md)
 
 The lecture introduces `%` formatting with format specifiers:
 
