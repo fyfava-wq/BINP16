@@ -235,10 +235,10 @@ T1 = ('Lion', 'Dog', 'Cat', 'Tiger', 'Monkey')
 
 T1[0]       # 'Lion'
 T1[1:3]     # ('Dog', 'Cat')
-len(T1)
-T1 == T1
-T1 + ('Cow',)
-T1 * 2
+len(T1)     # 5
+T1 == T1    # True
+T1 + ('Cow',)  # ('Lion', 'Dog', 'Cat', 'Tiger', 'Monkey', 'Cow')
+T1 * 2      # ('Lion', 'Dog', 'Cat', 'Tiger', 'Monkey', 'Lion', 'Dog', 'Cat', 'Tiger', 'Monkey')
 ```
 
 ### Single-item tuple: trailing comma is required
