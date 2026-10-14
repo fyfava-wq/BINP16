@@ -9,8 +9,8 @@ Course notes, cheat sheets, and practical exercises for **BINP16**. This reposit
 Notes on the command line, files and directories, permissions, pipes, text processing, FASTQ files, logging, and working with data.
 
 - [Bash I Cheat Sheet](Bash/Bash-I-Cheat-Sheet.md)
-- [Bash II Cheat Sheet — 10 October](Bash/Bash-II-Cheat-Sheet-10-01.md)
-- [Bash III Cheat Sheet — 2 October](Bash/Bash-III-Cheat-Sheet-10-02.md)
+- [Bash II Cheat Sheet](Bash/Bash-II-Cheat-Sheet-10-01.md)
+- [Bash III Cheat Sheet](Bash/Bash-III-Cheat-Sheet-10-02.md)
 - [Bash Practice Questions — Answered](Bash/Bash-101-Q-answered.md)
 - [Conda, Ubuntu and VS Code Cheat Sheet](Bash/Conda-Ubuntu-VSCode-Cheat-Sheet.md)
 
@@ -29,44 +29,11 @@ Lecture notes and examples covering Python fundamentals through modules and pack
 ### Exercises
 
 - [Python Exercises Notebook](Exercises/PythonExercises.ipynb) — exercise prompts and code answers.
-- **Regular-expression exercise files** (`Exercises/RE1/`):
+- **Running Exercise 1 files** (`Exercises/RE1/`):
   - `malaria.py`
   - `malaria.fna`
   - `malaria.blastx.tab`
   - `output.txt`
-
-### Supplementary Notes
-
-- [Understanding `%` String Formatting](Supplementary/13_explained.md)
-
-## Repository Structure
-
-```text
-BINP16/
-├── README.md
-├── Bash/
-│   ├── Bash-I-Cheat-Sheet.md
-│   ├── Bash-II-Cheat-Sheet-10-01.md
-│   ├── Bash-III-Cheat-Sheet-10-02.md
-│   ├── Bash-101-Q-answered.md
-│   └── Conda-Ubuntu-VSCode-Cheat-Sheet.md
-├── Exercises/
-│   ├── PythonExercises.ipynb
-│   └── RE1/
-│       ├── malaria.py
-│       ├── malaria.fna
-│       ├── malaria.blastx.tab
-│       └── output.txt
-├── Python-Lecture-1-Data_Types.md
-├── Python-Lecture-2-Collection_Data_Types.md
-├── Python-Lecture-3-Loops.md
-├── Python-Lecture-4-File_Handling.md
-├── Python-Lecture-5-Functions.md
-├── Python-Lecture-6-RE.md
-├── Python-Lecture-7-Modules.md
-└── Supplementary/
-    └── 13_explained.md
-```
 
 ## Working with the Materials
 
