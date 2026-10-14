@@ -1,23 +1,43 @@
-# BINP16
+# BINP16 — Course Notes and Practical Materials
 
-Course notes and practical materials for **BINP16**.
+Course notes, cheat sheets, and practical exercises for **BINP16**. This repository is a personal study reference for Bash/Linux, Python, regular expressions, modules and packages, and bioinformatics workflows.
 
-## Topics of the Week
+## Topics and Materials
 
-### Week 1 — Bash
+### Bash and Linux
 
-Introduction to the Linux command line and Bash, with a focus on working with files and directories, permissions, data streams, pipes, text processing, FASTQ files, logging, and transferring data between local and remote systems.
-
-**Materials:**
+Notes on the command line, files and directories, permissions, pipes, text processing, FASTQ files, logging, and working with data.
 
 - [Bash I Cheat Sheet](Bash/Bash-I-Cheat-Sheet.md)
-- [Bash Practice Questions — Answered](Bash/Bash-2025-101-Q-answered.md)
+- [Bash II Cheat Sheet — 10 October](Bash/Bash-II-Cheat-Sheet-10-01.md)
+- [Bash III Cheat Sheet — 2 October](Bash/Bash-III-Cheat-Sheet-10-02.md)
+- [Bash Practice Questions — Answered](Bash/Bash-101-Q-answered.md)
+- [Conda, Ubuntu and VS Code Cheat Sheet](Bash/Conda-Ubuntu-VSCode-Cheat-Sheet.md)
 
-### More topics coming
+### Python
 
-Additional course topics and notes will be added here as the course progresses.
+Lecture notes and examples covering Python fundamentals through modules and packages.
 
----
+- [Lecture 1 — Data Types](Python-Lecture-1-Data_Types.md)
+- [Lecture 2 — Collection Data Types](Python-Lecture-2-Collection_Data_Types.md)
+- [Lecture 3 — Loops](Python-Lecture-3-Loops.md)
+- [Lecture 4 — File Handling](Python-Lecture-4-File_Handling.md)
+- [Lecture 5 — Functions](Python-Lecture-5-Functions.md)
+- [Lecture 6 — Regular Expressions](Python-Lecture-6-RE.md)
+- [Lecture 7 — Modules and Packages](Python-Lecture-7-Modules.md)
+
+### Exercises
+
+- [Python Exercises Notebook](Exercises/PythonExercises.ipynb) — exercise prompts and code answers.
+- **Regular-expression exercise files** (`Exercises/RE1/`):
+  - `malaria.py`
+  - `malaria.fna`
+  - `malaria.blastx.tab`
+  - `output.txt`
+
+### Supplementary Notes
+
+- [Understanding `%` String Formatting](Supplementary/13_explained.md)
 
 ## Repository Structure
 
@@ -26,10 +46,42 @@ BINP16/
 ├── README.md
 ├── Bash/
 │   ├── Bash-I-Cheat-Sheet.md
-│   └── Bash-2025-101-Q-answered.md
-└── ...
+│   ├── Bash-II-Cheat-Sheet-10-01.md
+│   ├── Bash-III-Cheat-Sheet-10-02.md
+│   ├── Bash-101-Q-answered.md
+│   └── Conda-Ubuntu-VSCode-Cheat-Sheet.md
+├── Exercises/
+│   ├── PythonExercises.ipynb
+│   └── RE1/
+│       ├── malaria.py
+│       ├── malaria.fna
+│       ├── malaria.blastx.tab
+│       └── output.txt
+├── Python-Lecture-1-Data_Types.md
+├── Python-Lecture-2-Collection_Data_Types.md
+├── Python-Lecture-3-Loops.md
+├── Python-Lecture-4-File_Handling.md
+├── Python-Lecture-5-Functions.md
+├── Python-Lecture-6-RE.md
+├── Python-Lecture-7-Modules.md
+└── Supplementary/
+    └── 13_explained.md
 ```
 
-## Notes
+## Working with the Materials
 
-This repository contains my course notes, practical exercises, and useful command references collected throughout BINP16.
+- Open Markdown (`.md`) files directly on GitHub for readable notes and code examples.
+- Open `PythonExercises.ipynb` in Jupyter or VS Code to work through the exercises.
+- Run Python code from the Conda environment intended for the course/project.
+- Keep paths in code examples relative to the repository where possible.
+
+## Updating These Notes
+
+When adding a new lecture or topic:
+1. Add the notes or exercise files to the appropriate folder.
+2. Add a link to the file in the relevant section above.
+3. Update the repository structure if the folder layout changes.
+
+---
+
+These materials are collected for personal study and revision throughout BINP16.
