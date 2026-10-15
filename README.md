@@ -26,15 +26,6 @@ Lecture notes and examples covering Python fundamentals through modules and pack
 - [Lecture 6 — Regular Expressions](Python-Lecture-6-RE.md)
 - [Lecture 7 — Modules and Packages](Python-Lecture-7-Modules.md)
 
-### Exercises
-
-- [Python Exercises Notebook](Exercises/PythonExercises.ipynb) — exercise prompts and code answers.
-- **Running Exercise 1 files** (`Exercises/RE1/`):
-  - `malaria.py`
-  - `malaria.fna`
-  - `malaria.blastx.tab`
-  - `output.txt`
-
 ## Working with the Materials
 
 - Open Markdown (`.md`) files directly on GitHub for readable notes and code examples.
@@ -42,12 +33,6 @@ Lecture notes and examples covering Python fundamentals through modules and pack
 - Run Python code from the Conda environment intended for the course/project.
 - Keep paths in code examples relative to the repository where possible.
 
-## Updating These Notes
-
-When adding a new lecture or topic:
-1. Add the notes or exercise files to the appropriate folder.
-2. Add a link to the file in the relevant section above.
-3. Update the repository structure if the folder layout changes.
 
 ---
 
