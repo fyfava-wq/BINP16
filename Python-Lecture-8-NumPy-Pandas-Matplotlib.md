@@ -60,7 +60,7 @@ len(matrix)       # size of first dimension: 2
 ```python
 np.arange(0, 10, 2)              # [0, 2, 4, 6, 8]
 np.arange(0.5, 3.0, 0.5)         # stop is excluded
-np.linspace(1, 10, 5)             # 5 evenly spaced values including endpoints
+np.linspace(1, 10, 5)            #  [1., 3.25, 5.5 , 7.75, 10.] 5 evenly spaced values including endpoints
 np.linspace(1, 10, 5, endpoint=False)
 ```
 
