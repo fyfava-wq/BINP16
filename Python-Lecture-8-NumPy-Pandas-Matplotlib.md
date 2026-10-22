@@ -103,6 +103,7 @@ A[::2, ::3]   # every second row and every third column
 ```python
 x = np.arange(18)
 x.reshape(3, 6)  # 3 rows x 6 columns; total element count must remain 18
+x.reshape(3, -1) # 3 rows and calculates how many columns are needed
 x.T              # transpose
 x.flatten()      # makes 1D
 ```
