@@ -18,7 +18,7 @@ Notes on the command line, files and directories, permissions, pipes, text proce
 
 Lecture notes and examples covering Python fundamentals, collections, loops, file handling, functions, regular expressions, modules, data analysis, AI, object-oriented programming, and linting.
 
-- [Python Function Lookup — searchable index with links to relevant notes](BINP16-Python-Function-Lookup.md)
+- [Python Function Lookup — searchable index with links to relevant notes](Python-Function-Lookup.md)
 - [Lecture 1 — Data Types](Python-Lecture-1-Data_Types.md)
 - [Lecture 2 — Collection Data Types](Python-Lecture-2-Collection_Data_Types.md)
 - [Lecture 3 — Loops](Python-Lecture-3-Loops.md)
