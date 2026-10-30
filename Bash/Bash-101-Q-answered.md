@@ -1002,5 +1002,283 @@ zcat raw/ERR1021663_1.fastq.gz | sed '2~4 s/\(AT\)\{3,\}/NNNNNN/g' | head -20
 ```
 ---
 
-# End of Worksheet
-Practice these in your terminal for mastery. Refer back to presentation slides for context!
+# BINP16 Bash and AWK Questions — Answers
+
+*Source document dated 2024-10-24.*
+
+## Mandatory Bash questions
+
+### 1. Calculate GC content (3.11.1)
+
+**Task:** Calculate GC content (0–100) in `paxillus.fna`, to four decimal places.
+
+```bash
+echo "scale=5; $(grep -v '>' paxillus.fna | tr -d '\nATat' | wc -c) / $(grep -v '>' paxillus.fna | tr -d '\n' | wc -c)*100" | bc
+```
+
+Example output: `52.60400`
+
+`grep -v '>'` removes FASTA headers. `tr -d '\nATat'` removes line breaks and A/T bases, leaving G/C bases (assuming no ambiguous bases such as N). `wc -c` counts characters. The denominator removes only line breaks, counting all sequence characters. `bc` performs the calculation; `scale=5` provides an extra decimal because `bc` truncates rather than rounds.
+
+Alternative GC count:
+
+```bash
+grep -v '>' paxillus.fna | grep -io '[GC]' | wc -l
+```
+
+Here, `-i` makes the match case-insensitive.
+
+### 2. Count occurrences of an oligo (3.11.2)
+
+**Task:** Count occurrences of `GAAGTC` in `paxillus.fna`.
+
+```bash
+cat paxillus.fna | grep -o 'GAAGTC' | wc -l
+```
+
+Example output: `33976`
+
+`grep -o` prints each match separately, and `wc -l` counts the matches. Use `wc -l`, not `wc -c`, to avoid counting newline characters.
+
+### 3. Extract FASTA sequence IDs (3.11.3)
+
+**Task:** Extract the ID up to the first whitespace, remove `>`, and put all IDs on one line separated by spaces.
+
+```bash
+grep '>' paxillus.fna | tr -d '\>' | cut -f1 -d ' ' | tr '\n' ' ' > paxillus_seq_ids.txt
+```
+
+`grep` selects header lines, `tr` removes `>`, `cut` selects the first space-delimited field, and the final `tr` replaces newlines with spaces.
+
+To calculate the requested sum of colons, spaces and lines:
+
+```bash
+echo $(grep -o ':' paxillus_seq_ids.txt | wc -l)+$(grep -o ' ' paxillus_seq_ids.txt | wc -l)+$(cat paxillus_seq_ids.txt | wc -l) | bc
+```
+
+The source document notes that the quiz gives `7000001`, while this command returns `7000000`.
+
+### 4. Count directories in `PATH` (3.11.4)
+
+**Correct command:**
+
+```bash
+echo "$PATH" | tr ':' '\n' | wc -l
+```
+
+`PATH` entries are separated by colons. `tr` converts each colon into a newline, and `wc -l` counts the entries. Counting colons directly gives one fewer than the number of entries. Using `echo -n` removes the final newline and causes `wc -l` to underestimate the count.
+
+## Optional Bash questions
+
+### 1. Count distinct directories in `PATH` (modified 3.11.4)
+
+```bash
+echo "$PATH" | tr ':' '\n' | sort -u | wc -l
+```
+
+`sort -u` sorts the entries and removes duplicates before they are counted.
+
+### 2. Convert FASTQ to FASTA (3.11.5)
+
+A FASTQ record generally contains four lines: an ID, a sequence, a quality ID, and quality values. FASTA retains the ID and sequence.
+
+**Without `grep`:**
+
+```bash
+cat example.fastq | paste - - - - | cut -f1-2 | tr '\t@' '\n>' > example.fasta
+```
+
+**Using `grep`:**
+
+```bash
+cat example.fastq | grep --no-group-separator -A1 '@SRR' | tr '@' '\>' > example.fasta
+```
+
+`grep -A1` prints the matching header and the following sequence line. `--no-group-separator` removes separator lines inserted between matching groups.
+
+Another `grep` solution:
+
+```bash
+cat example.fastq | grep -A1 '@SRR' | grep -v '-' | tr '@' '\>' > example.fasta
+```
+
+Be careful when matching `@`, since it can also occur in quality strings. Use a pattern such as `@SRR` if it uniquely identifies header lines.
+
+To check the output by summing lines, colons, `>` characters and `C` characters:
+
+```bash
+echo $(grep -Eo 'C|:|>' example.fasta | wc -l) + $(cat example.fasta | wc -l) | bc
+```
+
+Example output: `1613626`
+
+`-E` enables extended regular expressions, allowing `|` to specify alternative patterns.
+
+### 3. Extract taxon IDs from a tree file (3.11.6)
+
+**Task:** Extract all taxon IDs from `pgi.tre`, one per line.
+
+**Without regular expressions:**
+
+```bash
+cat pgi.tre | tr -d '(' | tr ',' '\n' | cut -f1 -d ':' > pgi.tre.names
+wc -c pgi.tre.names
+```
+
+**Using `grep`:**
+
+```bash
+grep -o '[,(][^:]*' pgi.tre | tr -d ',(' > pgi.tre.names
+```
+
+`[,(][^:]*` matches either `,` or `(`, followed by zero or more characters that are not `:`. `tr` removes the leading punctuation.
+
+Example byte count in the source: `10384`.
+
+### 4. Compare compression ratios (3.11.7)
+
+**Task:** Compare `gzip`, `bzip2` and `zip` on `example.fastq`.
+
+Compression ratio:
+
+\[
+100 \times (1-c/u)
+\]
+
+where `c` is the compressed file size and `u` is the uncompressed file size.
+
+Create the compressed files:
+
+```bash
+gzip -c example.fastq > example.fastq.gz
+bzip2 -c example.fastq > example.fastq.bz2
+zip example.fastq.zip example.fastq
+```
+
+Calculate the ratios:
+
+```bash
+echo "100*(1-$(ls -l example.fastq.zip | cut -d ' ' -f5)/$(ls -l example.fastq | cut -d ' ' -f5))" | bc -l
+echo "100*(1-$(ls -l example.fastq.bz2 | cut -d ' ' -f5)/$(ls -l example.fastq | cut -d ' ' -f5))" | bc -l
+echo "100*(1-$(ls -l example.fastq.gz | cut -d ' ' -f5)/$(ls -l example.fastq | cut -d ' ' -f5))" | bc -l
+```
+
+Approximate ratios reported in the source:
+
+| Format | Compression ratio |
+|---|---:|
+| ZIP | 82.13661% |
+| BZIP2 | 88.21695% |
+| GZIP | 82.13761% |
+| **Sum** | **252.49118%** |
+
+Alternatively, `wc -c` can be used to obtain file sizes:
+
+```bash
+echo "100*(1-$(cat example.fastq.zip | wc -c)/$(cat example.fastq | wc -c))" | bc -l
+```
+
+## Extra optional Bash questions
+
+### 1. Calculate GC content for every sequence (4.6.8)
+
+**Task:** Calculate GC content for each sequence in `paxillus.fna`. The requested check is the sum for sequences 999, 6635 and 9318.
+
+```bash
+cat paxillus.fna | paste - - | while IFS=$'\t' read name seq
+do
+    gc=$(echo "scale=3; 100*$(echo "$seq" | tr -d 'AT\n' | wc -c)/$(echo "$seq" | tr -d '\n' | wc -c)" | bc)
+    echo -e "$(echo "$name" | tr -d '\>')\t$gc"
+done > paxillus.fna.gc_per_seq.txt
+```
+
+`IFS=$'\t'` sets the input field separator to a tab for `read`. This is necessary because sequence headers may contain spaces.
+
+Sum the GC contents of the specified sequences:
+
+```bash
+echo $(cat paxillus.fna.gc_per_seq.txt | head -999 | tail -1 | cut -f2) + $(cat paxillus.fna.gc_per_seq.txt | head -6635 | tail -1 | cut -f2) + $(cat paxillus.fna.gc_per_seq.txt | head -9318 | tail -1 | cut -f2) | bc
+```
+
+Example output: `130.692`
+
+### 2. Count bytes versus characters (4.6.9)
+
+```bash
+echo $(($(echo -n Höör | wc -c) + $(echo -n Hoor | wc -c)))
+echo $(($(echo -n Höör | wc -m) + $(echo -n Hoor | wc -m)))
+```
+
+Outputs:
+
+```text
+10
+8
+```
+
+`wc -c` counts bytes. In UTF-8, `ö` uses two bytes, while ordinary ASCII letters use one byte. `wc -m` counts characters, so `ö` counts as one character.
+
+## Mandatory AWK questions
+
+### 1. Find the longest sequence
+
+**Task:** Find the longest sequence in `regions.fna`; print its ID and length.
+
+```bash
+awk '/^>/ {name=$1} {if (max_length < length($1)) {max_length=length($1); max_name=name}} END {print max_name, "\t", max_length}' regions.fna
+```
+
+`/^>/` detects a FASTA header and stores its first field as `name`. For each line, the sequence length is compared with the current maximum. When a longer sequence is found, its length and corresponding ID are stored. `END` prints the ID and length.
+
+### 2. Calculate AT percentage for sequence 101
+
+**Using AWK's built-in `NR` variable:**
+
+```bash
+awk 'NR==202 {size=length($0); at=gsub(/[AT]/,"",$0); print at/size*100}' regions.fna
+```
+
+This assumes each sequence occupies one line and each FASTA record therefore occupies two lines. The 101st sequence is on line 202.
+
+**Alternative using a sequence counter:**
+
+```bash
+awk '/^[^>]/ {counter=counter+1; if(counter==101) {size=length($0); at=gsub(/[AT]/,"",$0); print at/size*100}}' regions.fna
+```
+
+`/^[^>]/` matches lines that do not start with `>`, i.e. sequence lines. The counter increases for each sequence line, and the calculation is performed when it reaches 101.
+
+## Optional AWK questions
+
+### 1. Calculate total sequence length (5.5.10)
+
+**Using the `length=` value in the header:**
+
+```bash
+awk '/^>/ {sub(/length=/, "", $2); comb_length=$2+comb_length} END {print comb_length}' regions.fna
+```
+
+**Counting nucleotides in sequence lines:**
+
+```bash
+awk '/^[^>]/ {comb_length=length($1)+comb_length} END {print comb_length}' regions.fna
+```
+
+Both methods give the same result in the source example: `1122127`.
+
+### 2. Calculate GC content for each sequence (5.5.11)
+
+**Task:** Print each sequence ID and its GC content as a fraction, rounded to two decimal places.
+
+Example output:
+
+```text
+FPV3KKJ01CKVDG    0.48
+FPV3KKJ01CBJGS    0.54
+```
+
+```bash
+awk '/^>/ {sub(">","",$1); printf("%s\t",$1); next} {total=length($1); gc=gsub(/[GCgc]/,"",$1); printf("%.2f\n",gc/total)}' regions.fna
+```
+
+When a header is encountered, `sub` removes `>` from the ID and `printf` prints the ID followed by a tab without a newline. `next` skips the remaining commands for that header. For a sequence line, `length` stores the sequence length, `gsub` counts G and C characters, and `printf("%.2f\n",gc/total)` prints the GC fraction to two decimal places.
